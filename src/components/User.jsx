@@ -3,7 +3,7 @@ import React, { useState } from 'react'
 import { useForm } from 'react-hook-form';
 import { GoTriangleLeft, GoTriangleRight } from "react-icons/go";
 import { baseUrl, socketUrl } from '../utils/baseUrl';
-import { gameAdd} from '../redux/slices./gameSlice';
+import { gameAdd, setPlayer} from '../redux/slices./gameSlice';
 import { useDispatch } from 'react-redux'
 import io from 'socket.io-client';
 import Logo from './Logo';
@@ -45,16 +45,17 @@ const User = () => {
             data: data
         })
             .then((response) => {
-                dispatch((gameAdd(response.data.data)))
-                const socket = io(`${socketUrl}/game/${response.data.data._id}`)
+                dispatch((gameAdd(response.data.data.room_details)))
+                dispatch(setPlayer(response.data.data.player_details))
+                const socket = io(`${socketUrl}/game/${response.data.data.room_details._id}`)
                 setSocket(socket)
                 if (btn.name == 'create-room') {
                     set_is_private_room_creator(true)
-                    socket.emit('createRoom', response.data.data.room_id)
+                    socket.emit('createRoom', response.data.data.room_details.room_id)
                 }
                 else if (btn.name == "play") {
                     set_is_private_room_creator(false)
-                    socket.emit('joinRoom', response.data.data.room_id)
+                    socket.emit('joinRoom', response.data.data.room_details.room_id)
                 }
                 setUserCreated(true)
             })

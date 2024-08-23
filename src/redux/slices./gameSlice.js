@@ -3,7 +3,8 @@ import { createSlice } from "@reduxjs/toolkit";
 const initialState = {
     game : null,
     player : null,
-    playerList : null
+    playerList : null,
+    TotalPlayer : 0
 }
 const gameSlice = createSlice({
     name: 'Game',
@@ -44,10 +45,23 @@ const gameSlice = createSlice({
                 ... state,
                 playerList : null
             }
+        },
+        updateRounds(state,action){
+            return {
+                ...state,
+                ...game,
+                round : action.payload
+            }
+        },
+        updatePlayerCount(state,action){
+            return {
+                ...state,
+                TotalPlayer : TotalPlayer + 1
+            }
         }
     }
 })
 
-export const {gameAdd,gameDelete,setPlayer,resetPlayer,setPlayerList,resetPlayerList} = gameSlice.actions
+export const {gameAdd,gameDelete,setPlayer,resetPlayer,setPlayerList,resetPlayerList,UpdateRounds,updatePlayerCount} = gameSlice.actions
 
 export default gameSlice.reducer
